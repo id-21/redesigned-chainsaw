@@ -22,6 +22,7 @@
   "homepage": "https://github.com/id-21/redesigned-chainsaw#readme",
   "dependencies": {
     "@clerk/nextjs": "^6.35.2",
+    "@google/genai": "^1.30.0",
     "@supabase/supabase-js": "^2.84.0",
     "next": "^16.0.3",
     "react": "^19.2.0",
