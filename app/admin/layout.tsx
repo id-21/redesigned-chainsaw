@@ -1,4 +1,4 @@
-import { SignedIn, UserButton } from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
@@ -21,8 +21,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <SignedIn>
-      <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
         {/* Sidebar */}
         <aside className="fixed left-0 top-0 h-full w-64 bg-gray-900 text-white">
           <div className="p-6">
@@ -84,6 +83,5 @@ export default async function AdminLayout({
           <main className="p-8">{children}</main>
         </div>
       </div>
-    </SignedIn>
   );
 }
