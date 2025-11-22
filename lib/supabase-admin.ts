@@ -1,6 +1,5 @@
 import { cache } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { supabase } from "./supabase";
 
 /**
  * Supabase Admin Client (Service Role)
@@ -146,7 +145,7 @@ export const isUserAdmin = cache(async (clerkUserId: string): Promise<boolean> =
  * Get all users (admin only)
  */
 export async function getAllUsers() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("users")
     .select("*")
     .order("created_at", { ascending: false });
@@ -166,7 +165,7 @@ export async function updateUserCredits(
   userId: string,
   creditsToAdd: number
 ) {
-  const { data, error } = await supabase.rpc("add_user_credits", {
+  const { data, error } = await supabaseAdmin.rpc("add_user_credits", {
     user_id: userId,
     credits: creditsToAdd,
   });
@@ -183,7 +182,7 @@ export async function updateUserCredits(
  * Get all products (admin only)
  */
 export async function getAllProducts() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("products")
     .select(`
       *,
@@ -206,7 +205,7 @@ export async function getAllProducts() {
  * Get all generated assets (admin only)
  */
 export async function getAllGeneratedAssets() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from("generated_assets")
     .select(`
       *,
@@ -233,17 +232,17 @@ export async function getAllGeneratedAssets() {
  */
 export async function getDashboardStats() {
   // Get user count
-  const { count: userCount, error: userError } = await supabase
+  const { count: userCount, error: userError } = await supabaseAdmin
     .from("users")
     .select("*", { count: "exact", head: true });
 
   // Get product count
-  const { count: productCount, error: productError } = await supabase
+  const { count: productCount, error: productError } = await supabaseAdmin
     .from("products")
     .select("*", { count: "exact", head: true });
 
   // Get generation stats
-  const { data: generationData, error: generationError } = await supabase
+  const { data: generationData, error: generationError } = await supabaseAdmin
     .from("generated_assets")
     .select("status, credits_used, api_cost");
 

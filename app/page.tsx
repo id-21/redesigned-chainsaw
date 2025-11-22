@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { getUserById } from "@/lib/supabase-admin";
 import HomePageClient from "./components/HomePageClient";
+import Link from "next/link";
 
 export default async function Home() {
   const { userId } = await auth();
@@ -13,7 +14,17 @@ export default async function Home() {
 
   return (
     <>
-      {isAdmin && <h1 className="text-4xl font-bold p-8">Admin</h1>}
+      {isAdmin && (
+        <div className="p-8">
+          <h1 className="text-4xl font-bold mb-4">Admin</h1>
+          <Link
+            href="/admin/dashboard"
+            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
+          >
+            Go to Admin Dashboard
+          </Link>
+        </div>
+      )}
       <HomePageClient />
     </>
   );
