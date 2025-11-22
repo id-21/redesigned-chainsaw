@@ -1,12 +1,12 @@
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Note: UUID extension not needed - using TEXT IDs for Clerk compatibility
+-- CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- =====================================================
 -- 1. USERS TABLE
 -- =====================================================
 CREATE TABLE users (
-    -- Primary Key
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    -- Primary Key (TEXT to support Clerk user IDs like "user_...")
+    id TEXT PRIMARY KEY,
 
     -- Authentication
     email VARCHAR(255) UNIQUE NOT NULL,
@@ -46,11 +46,11 @@ CREATE INDEX idx_users_role ON users(role);
 -- 2. PRODUCTS TABLE
 -- =====================================================
 CREATE TABLE products (
-    -- Primary Key
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    -- Primary Key (TEXT with generated UUID string)
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
 
-    -- User Association
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    -- User Association (TEXT to match users.id)
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
     -- Core Product Info
     name VARCHAR(255) NOT NULL,
@@ -83,14 +83,14 @@ CREATE INDEX idx_products_tags ON products USING GIN (tags);
 -- 3. GENERATED ASSETS TABLE
 -- =====================================================
 CREATE TABLE generated_assets (
-    -- Primary Key
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    -- Primary Key (TEXT with generated UUID string)
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
 
-    -- Foreign Key to Products
-    product_id UUID NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+    -- Foreign Key to Products (TEXT to match products.id)
+    product_id TEXT NOT NULL REFERENCES products(id) ON DELETE CASCADE,
 
-    -- User Association
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    -- User Association (TEXT to match users.id)
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
 
     -- Generation Details
     generation_type VARCHAR(50) NOT NULL,
@@ -140,8 +140,8 @@ CREATE INDEX idx_generated_assets_created_at ON generated_assets(created_at DESC
 -- 4. USAGE STATISTICS TABLE (Optional)
 -- =====================================================
 CREATE TABLE usage_stats (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::TEXT,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     date DATE NOT NULL,
 
     total_generations INTEGER DEFAULT 0,
@@ -172,40 +172,44 @@ ALTER TABLE usage_stats ENABLE ROW LEVEL SECURITY;
 
 -- Users table policies
 CREATE POLICY "Users can view own profile" ON users
-    FOR SELECT USING (auth.uid() = id);
+    FOR SELECT USING (auth.uid()::TEXT = id);
 
 CREATE POLICY "Users can update own profile" ON users
-    FOR UPDATE USING (auth.uid() = id);
+    FOR UPDATE USING (auth.uid()::TEXT = id);
+
+-- Allow authenticated users to insert their own record
+CREATE POLICY "Users can create own profile" ON users
+    FOR INSERT WITH CHECK (auth.uid()::TEXT = id);
 
 -- Products table policies
 CREATE POLICY "Users can view own products" ON products
-    FOR SELECT USING (auth.uid() = user_id);
+    FOR SELECT USING (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can insert own products" ON products
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
+    FOR INSERT WITH CHECK (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can update own products" ON products
-    FOR UPDATE USING (auth.uid() = user_id);
+    FOR UPDATE USING (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can delete own products" ON products
-    FOR DELETE USING (auth.uid() = user_id);
+    FOR DELETE USING (auth.uid()::TEXT = user_id);
 
 -- Generated assets table policies
 CREATE POLICY "Users can view own generated assets" ON generated_assets
-    FOR SELECT USING (auth.uid() = user_id);
+    FOR SELECT USING (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can insert own generated assets" ON generated_assets
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
+    FOR INSERT WITH CHECK (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can update own generated assets" ON generated_assets
-    FOR UPDATE USING (auth.uid() = user_id);
+    FOR UPDATE USING (auth.uid()::TEXT = user_id);
 
 CREATE POLICY "Users can delete own generated assets" ON generated_assets
-    FOR DELETE USING (auth.uid() = user_id);
+    FOR DELETE USING (auth.uid()::TEXT = user_id);
 
 -- Usage stats table policies
 CREATE POLICY "Users can view own usage stats" ON usage_stats
-    FOR SELECT USING (auth.uid() = user_id);
+    FOR SELECT USING (auth.uid()::TEXT = user_id);
 
 -- =====================================================
 -- 6. ADMIN POLICIES (Full access for admin role)
@@ -216,7 +220,7 @@ CREATE POLICY "Admins can view all products" ON products
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM users
-            WHERE users.id = auth.uid()
+            WHERE users.id = auth.uid()::TEXT
             AND users.role = 'admin'
         )
     );
@@ -226,7 +230,7 @@ CREATE POLICY "Admins can view all generated assets" ON generated_assets
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM users
-            WHERE users.id = auth.uid()
+            WHERE users.id = auth.uid()::TEXT
             AND users.role = 'admin'
         )
     );
@@ -236,7 +240,7 @@ CREATE POLICY "Admins can view all users" ON users
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM users
-            WHERE users.id = auth.uid()
+            WHERE users.id = auth.uid()::TEXT
             AND users.role = 'admin'
         )
     );
@@ -246,7 +250,7 @@ CREATE POLICY "Admins can view all usage stats" ON usage_stats
     FOR SELECT USING (
         EXISTS (
             SELECT 1 FROM users
-            WHERE users.id = auth.uid()
+            WHERE users.id = auth.uid()::TEXT
             AND users.role = 'admin'
         )
     );
