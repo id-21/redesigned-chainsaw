@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { formatCredits, getCreditWarningLevel } from '@/lib/features/virtual-tryon/utils';
-import type { GeneratedAssetWithProduct, UserCredits } from '@/lib/features/virtual-tryon/types';
+import type { GeneratedAssetWithProduct, UserCredits, Product } from '@/lib/features/virtual-tryon/types';
 import GenerationsGallery from './GenerationsGallery';
+import ProductsGallery from './ProductsGallery';
 
 interface VirtualTryonHomePageProps {
   user: {
@@ -12,12 +13,14 @@ interface VirtualTryonHomePageProps {
     email: string;
   };
   credits: UserCredits;
+  products: Product[];
   recentGenerations: GeneratedAssetWithProduct[];
 }
 
 export default function VirtualTryonHomePage({
   user,
   credits,
+  products,
   recentGenerations,
 }: VirtualTryonHomePageProps) {
   const creditWarning = getCreditWarningLevel(credits.credits_remaining);
@@ -64,7 +67,7 @@ export default function VirtualTryonHomePage({
 
             <div className="flex gap-3">
               <Link
-                href="/virtual-tryon/generate"
+                href="/virtual-tryon/register"
                 className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-sm"
               >
                 <svg
@@ -84,6 +87,20 @@ export default function VirtualTryonHomePage({
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* My Products Section */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">My Products</h2>
+            <Link
+              href="/virtual-tryon/register"
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              + Add Product
+            </Link>
+          </div>
+          <ProductsGallery products={products} />
         </div>
 
         {/* Generations Gallery */}
@@ -125,7 +142,7 @@ export default function VirtualTryonHomePage({
                   Get started by creating your first virtual try-on image!
                 </p>
                 <Link
-                  href="/virtual-tryon/generate"
+                  href="/virtual-tryon/register"
                   className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
                 >
                   Create Your First Generation

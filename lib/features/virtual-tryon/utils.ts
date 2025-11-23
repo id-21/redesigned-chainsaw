@@ -141,6 +141,28 @@ export function getCreditWarningLevel(credits: number): 'none' | 'low' | 'critic
 // IMAGE HELPERS
 // =====================================================
 
+export function validateImageFile(file: File): { valid: boolean; error?: string } {
+  // Check file type
+  const validTypes = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp'];
+  if (!validTypes.includes(file.type)) {
+    return {
+      valid: false,
+      error: 'Invalid file type. Please upload PNG, JPG, or WEBP images.',
+    };
+  }
+
+  // Check file size (10MB max)
+  const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+  if (file.size > maxSize) {
+    return {
+      valid: false,
+      error: 'File size exceeds 10MB. Please upload a smaller image.',
+    };
+  }
+
+  return { valid: true };
+}
+
 export function getImageThumbnail(
   images: Array<{ url: string; is_primary?: boolean }>
 ): string | null {

@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { getUserById } from '@/lib/supabase-admin';
-import { getUserGeneratedAssets, getUserCredits } from '@/lib/features/virtual-tryon/queries';
+import { getUserGeneratedAssets, getUserCredits, getUserProducts } from '@/lib/features/virtual-tryon/queries';
 import VirtualTryonHomePage from './_components/VirtualTryonHomePage';
 
 export default async function VirtualTryonPage() {
@@ -19,8 +19,9 @@ export default async function VirtualTryonPage() {
     redirect('/sign-in');
   }
 
-  // Fetch recent generations and credits
-  const [recentGenerations, credits] = await Promise.all([
+  // Fetch products, recent generations, and credits
+  const [products, recentGenerations, credits] = await Promise.all([
+    getUserProducts(userId),
     getUserGeneratedAssets(userId, 12),
     getUserCredits(userId),
   ]);
@@ -33,6 +34,7 @@ export default async function VirtualTryonPage() {
         email: user.email,
       }}
       credits={credits}
+      products={products}
       recentGenerations={recentGenerations}
     />
   );

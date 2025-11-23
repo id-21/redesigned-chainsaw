@@ -92,6 +92,19 @@ export async function POST(request: NextRequest) {
       const productImage =
         product.images.find((img) => img.is_primary) || product.images[0];
 
+      // Fetch product image and convert to base64
+      const imageResponse = await fetch(productImage.url);
+      if (!imageResponse.ok) {
+        throw new Error('Failed to fetch product image');
+      }
+      const imageBuffer = await imageResponse.arrayBuffer();
+      const imageBase64 = Buffer.from(imageBuffer).toString('base64');
+
+      // Determine mime type from URL or default to image/jpeg
+      const mimeType = productImage.url.match(/\.(png|jpg|jpeg|webp)$/i)
+        ? `image/${productImage.url.match(/\.(png|jpg|jpeg|webp)$/i)![1].toLowerCase()}`
+        : 'image/jpeg';
+
       // Build generation prompt based on type
       let generationPrompt = prompt || '';
 
@@ -111,10 +124,29 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // Call Gemini API
+      // Call Gemini API with both text prompt and product image
       const response = await ai.models.generateContent({
         model,
-        contents: generationPrompt,
+        contents: [
+          {
+            role: 'user',
+            parts: [
+              {
+                text: generationPrompt,
+              },
+              {
+                inlineData: {
+                  mimeType,
+                  data: imageBase64,
+                },
+              },
+            ],
+          },
+        ],
+        config: {
+          temperature: 0.9,
+          maxOutputTokens: 2048,
+        },
       });
 
       // Extract image data

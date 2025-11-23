@@ -1,7 +1,7 @@
 // File upload and storage helpers for Virtual Try-On feature
 // Uses Supabase Storage
 
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import type { UploadResult } from './types';
 
 const PRODUCT_IMAGES_BUCKET = 'product-images';
@@ -20,7 +20,7 @@ export async function uploadProductImage(
   const filename = `${userId}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
 
   // Upload to Supabase Storage
-  const { data, error } = await supabase.storage
+  const { data, error } = await supabaseAdmin.storage
     .from(PRODUCT_IMAGES_BUCKET)
     .upload(filename, file, {
       cacheControl: '3600',
@@ -33,7 +33,7 @@ export async function uploadProductImage(
   }
 
   // Get public URL
-  const { data: urlData } = supabase.storage
+  const { data: urlData } = supabaseAdmin.storage
     .from(PRODUCT_IMAGES_BUCKET)
     .getPublicUrl(filename);
 
@@ -54,7 +54,7 @@ export async function uploadGeneratedAsset(
 ): Promise<UploadResult> {
   const filename = `${userId}/${assetId}/${Date.now()}.png`;
 
-  const { data, error } = await supabase.storage
+  const { data, error } = await supabaseAdmin.storage
     .from(GENERATED_ASSETS_BUCKET)
     .upload(filename, file, {
       cacheControl: '3600',
@@ -67,7 +67,7 @@ export async function uploadGeneratedAsset(
     throw new Error('Failed to upload generated asset');
   }
 
-  const { data: urlData } = supabase.storage
+  const { data: urlData } = supabaseAdmin.storage
     .from(GENERATED_ASSETS_BUCKET)
     .getPublicUrl(filename);
 
@@ -82,7 +82,7 @@ export async function uploadGeneratedAsset(
 // =====================================================
 
 export async function deleteProductImage(filename: string): Promise<void> {
-  const { error } = await supabase.storage
+  const { error } = await supabaseAdmin.storage
     .from(PRODUCT_IMAGES_BUCKET)
     .remove([filename]);
 
@@ -93,7 +93,7 @@ export async function deleteProductImage(filename: string): Promise<void> {
 }
 
 export async function deleteGeneratedAsset(filename: string): Promise<void> {
-  const { error } = await supabase.storage
+  const { error } = await supabaseAdmin.storage
     .from(GENERATED_ASSETS_BUCKET)
     .remove([filename]);
 

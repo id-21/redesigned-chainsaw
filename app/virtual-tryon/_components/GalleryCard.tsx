@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import type { GeneratedAssetWithProduct } from '@/lib/features/virtual-tryon/types';
 import {
   formatDate,
@@ -80,10 +81,19 @@ export default function GalleryCard({ generation, onClick }: GalleryCardProps) {
         <p className="text-sm text-gray-600 mb-2">
           {getGenerationTypeLabel(generation.generation_type)}
         </p>
-        <div className="flex items-center justify-between text-xs text-gray-500">
+        <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
           <span>{formatDate(generation.created_at)}</span>
           <span>{generation.credits_used} credit{generation.credits_used !== 1 ? 's' : ''}</span>
         </div>
+
+        {/* Generate Again Button */}
+        <Link
+          href={`/virtual-tryon/generate/${generation.product_id}`}
+          onClick={(e) => e.stopPropagation()}
+          className="block w-full text-center px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded transition-colors"
+        >
+          Generate Again
+        </Link>
       </div>
     </div>
   );
