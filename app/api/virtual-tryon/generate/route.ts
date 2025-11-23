@@ -9,6 +9,11 @@ import {
   createGeneratedAsset,
 } from '@/lib/features/virtual-tryon/queries';
 import { getGenerationTypeCredits } from '@/lib/features/virtual-tryon/utils';
+import {
+  loadSystemInstruction,
+  buildGenerationPrompt,
+  type GenerationType,
+} from '@/lib/features/virtual-tryon/prompts';
 
 // POST /api/virtual-tryon/generate - Generate virtual try-on image
 export async function POST(request: NextRequest) {
@@ -105,26 +110,16 @@ export async function POST(request: NextRequest) {
         ? `image/${productImage.url.match(/\.(png|jpg|jpeg|webp)$/i)![1].toLowerCase()}`
         : 'image/jpeg';
 
-      // Build generation prompt based on type
-      let generationPrompt = prompt || '';
+      // Load system instruction (applies to all generation types)
+      const systemInstruction = loadSystemInstruction();
 
-      if (!generationPrompt) {
-        switch (generation_type) {
-          case 'model_shot':
-            generationPrompt = `Generate a professional model wearing or using this product in a studio setting with clean background.`;
-            break;
-          case 'lifestyle':
-            generationPrompt = `Generate a lifestyle image showing this product being used in a realistic, everyday setting.`;
-            break;
-          case 'room_scene':
-            generationPrompt = `Generate a beautifully styled room scene featuring this product in an interior design context.`;
-            break;
-          default:
-            generationPrompt = `Generate an image featuring this product.`;
-        }
-      }
+      // Build generation prompt from template with optional user instructions
+      const generationPrompt = buildGenerationPrompt(
+        generation_type as GenerationType,
+        prompt // User's custom instructions (optional)
+      );
 
-      // Call Gemini API with both text prompt and product image
+      // Call Gemini API with system instruction, prompt, and product image
       const response = await ai.models.generateContent({
         model,
         contents: [
@@ -144,6 +139,7 @@ export async function POST(request: NextRequest) {
           },
         ],
         config: {
+          systemInstruction,
           temperature: 0.9,
           maxOutputTokens: 2048,
         },
