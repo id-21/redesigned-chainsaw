@@ -53,6 +53,12 @@ export default async function AdminLayout({
             >
               Generations
             </Link>
+            <Link
+              href="/admin/analytics"
+              className="block px-6 py-3 hover:bg-gray-800 transition-colors"
+            >
+              Analytics
+            </Link>
           </nav>
 
           <div className="absolute bottom-6 left-6">

@@ -1,83 +1,29 @@
-# Room Scene Generation
+# Kids (7-12) Lifestyle & Thematic Context Generation
 
-Generate a beautifully styled interior room scene featuring the product in an interior design context.
+Generate a high-quality lifestyle photograph featuring a child (approx. age 7-12) wearing a specific graphic T-shirt. The environment must be an immersive, playful space that visually amplifies the theme of the T-shirt graphic.
 
-## Scene Requirements:
-- **Setting**: Complete, well-designed interior space
-- **Style**: Contemporary, cohesive design aesthetic
-- **Lighting**: Layered lighting approach (natural light + ambient + accent lighting)
-- **Composition**: Balanced, aesthetically pleasing layout
-- **Context**: Product presented as part of a curated, professional interior
+## Core Subject:
+- **Product**: The product I am sharing with this prompt. 
+- **Model**: A joyful child (age 7-12). Natural, diverse look.
+- **Action & Pose**: Candid and energetic. The child is *interacting* with the environment related to the theme (e.g., playing with relevant toys, laughing, exploring). Ensure arms are not crossed so the graphic is fully visible.
+- **Styling**: Durable, kid-appropriate casual wear (jeans, joggers, bright sneakers) that complements the T-shirt colors.
 
-## Interior Design Standards:
-- Professional staging quality (showroom or magazine-worthy)
-- Harmonious color palette with complementary tones
-- Complementary furniture and decor elements
-- Proper scale and proportion in all elements
-- Attention to styling details and finishing touches
-- Cohesive design theme throughout the space
+## Thematic Environment (The "World"):
+- **Concept**: The surroundings should feel like the child's imaginative world brought to life based on the shirt graphic.
+- **Examples**:
+    - If graphic is "Space/Astronauts": A bedroom filled with glow-in-the-dark stars and a cardboard rocket ship.
+    - If graphic is "Animals/Jungle": A sunlit backyard full of plants or a vibrant, themed playroom with plush animals.
+- **Atmosphere**: Vibrant, colorful, somewhat messy (in a fun, playful way), and safe.
 
-## Space Types (Choose product-appropriate):
+## Photography Standards:
+- **Shot Type**: Medium Shot or Medium-Long Shot. Camera at the child's eye level.
+- **Lighting**: Warm, natural daylight (golden hour feel). Bright and happy. No moody shadows.
+- **Focus**: Sharp focus on the child and the T-shirt graphic. The background should be discernible but slightly softened to keep the focus on the subject.
 
-### Living Spaces:
-- Living room, bedroom, dining room, home office
-- Open-plan layouts, cozy nooks, reading corners
-- Modern apartments, contemporary homes
+## Mood & Tone:
+- Joyful, innocent, energetic, and authentic.
+- High-quality commercial kids' photography (like a GAP Kids or Boden catalog).
+- Emphasize texture (soft cotton, dirt on knees if outdoors, plastic toys).
 
-### Commercial Spaces:
-- Boutique retail, showroom, gallery space
-- Professional offices, co-working spaces
-- Hospitality settings (hotel lobbies, cafés)
-
-### Design Styles:
-- Modern/Contemporary, Scandinavian, Minimalist
-- Industrial, Mid-century Modern, Transitional
-- Eclectic, Bohemian, Coastal, Traditional
-- Choose style that complements the product
-
-## Styling Guidelines:
-- Magazine-worthy composition and arrangement
-- Cohesive design theme with intentional choices
-- Appropriate accessories and decorative props
-- Professional interior photography standards
-- Aspirational yet achievable aesthetic
-- Attention to texture, pattern, and material mixing
-- Proper furniture arrangement and traffic flow
-
-## Photography Style:
-- Architectural/interior photography approach
-- Wide-angle or medium shot to show context
-- Proper perspective with straight vertical lines
-- Professional color grading and white balance
-- Commercial real estate photography quality
-- Good depth and dimensionality
-
-## Lighting Requirements:
-- Natural light from windows (if applicable)
-- Warm ambient lighting (lamps, overhead fixtures)
-- Accent lighting to highlight key features
-- Balanced exposure throughout the space
-- Soft, inviting illumination
-- No harsh shadows or overexposed areas
-
-## Product Integration:
-- Product featured prominently but not dominating
-- Natural placement within the space design
-- Complements overall interior aesthetic
-- Demonstrates product functionality or aesthetic value
-- Enhances the room's design rather than competing
-- Shows product at appropriate scale and context
-
-## Composition and Framing:
-- Rule of thirds for balanced composition
-- Leading lines drawing eye to product
-- Proper depth with foreground, middle ground, background
-- Clean, uncluttered presentation
-- Professional framing and cropping
-
-## Overall Aesthetic:
-- Sophisticated and polished
-- Inviting and comfortable
-- Design-forward and on-trend
-- High-end interior design publication quality
-- Creates desire and aspiration
+## Negative Prompts (Avoid):
+- Moody lighting, adult poses, serious expressions, stiff modeling, empty rooms, hazardous environments, blurred graphic text.

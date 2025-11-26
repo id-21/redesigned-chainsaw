@@ -4,6 +4,8 @@ import { GoogleGenAI } from '@google/genai';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { ProductAnalysisSchema, type ProductAnalysisResult } from '@/lib/features/virtual-tryon/schemas/product-analysis.schema';
+import { createApiUsageLog } from '@/lib/features/virtual-tryon/queries';
+import { calculateImageTokens } from '@/lib/features/virtual-tryon/cost-utils/cost-calculator';
 
 // Load prompt from markdown file
 async function loadPrompt(filename: string): Promise<string> {
@@ -66,7 +68,7 @@ export async function POST(request: NextRequest) {
     const imageBase64 = await fileToBase64(file);
 
     // Call Gemini API with vision model and structured output
-    const model = 'gemini-2.0-flash-exp'; // Using vision-capable model
+    const model = process.env.GEMINI_TEXT_MODEL || 'gemini-2.5-flash-lite'; // Using vision-capable model
 
     const response = await ai.models.generateContent({
       model,
@@ -116,6 +118,29 @@ export async function POST(request: NextRequest) {
 
     // Parse JSON response - guaranteed to be valid JSON by Gemini's structured output
     const productData: ProductAnalysisResult = JSON.parse(analysisText);
+
+    // Log API usage immediately (fire-and-forget for non-blocking performance)
+    const usage = response.usageMetadata;
+    if (usage) {
+      // Calculate image tokens based on uploaded image dimensions
+      // For now, using conservative estimate - in production, get actual dimensions
+      const imageTokens = calculateImageTokens(1024, 1024);
+
+      createApiUsageLog({
+        user_id: userId,
+        api_endpoint: '/api/virtual-tryon/analyze-product',
+        model_used: model,
+        raw_response_metadata: usage,
+        prompt_tokens: usage.promptTokenCount || 0,
+        prompt_image_tokens: imageTokens,
+        output_tokens: usage.candidatesTokenCount || 0,
+        thinking_tokens: (usage as any).thoughtsTokenCount || 0,
+        total_tokens: usage.totalTokenCount || 0,
+      }).catch((err) => {
+        console.error('Failed to log API usage:', err);
+        // Don't throw - we don't want to fail the request if logging fails
+      });
+    }
 
     return NextResponse.json({
       success: true,

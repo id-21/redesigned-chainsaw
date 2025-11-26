@@ -79,3 +79,43 @@ export interface UserCredits {
   credits_remaining: number;
   total_credits_purchased: number;
 }
+
+// =====================================================
+// API USAGE LOGGING TYPES
+// =====================================================
+
+export interface ApiUsageLog {
+  id: string;
+  user_id: string;
+  generated_asset_id: string | null;
+  product_id: string | null;
+  api_endpoint: string;
+  model_used: string;
+  raw_response_metadata: any;
+  prompt_tokens: number;
+  prompt_image_tokens: number;
+  output_tokens: number;
+  output_image_count: number; // Number of images generated (for image generation models)
+  thinking_tokens: number;
+  total_tokens: number;
+  api_cost_usd: number | null;
+  api_cost_inr: number | null;
+  usd_to_inr_rate: number | null;
+  cost_calculated_at: string | null;
+  created_at: string;
+}
+
+export interface CreateApiUsageLogInput {
+  user_id: string;
+  generated_asset_id?: string;
+  product_id?: string;
+  api_endpoint: string;
+  model_used: string;
+  raw_response_metadata: any;
+  prompt_tokens: number;
+  prompt_image_tokens?: number;
+  output_tokens: number;
+  output_image_count?: number; // Number of images generated (for image generation models)
+  thinking_tokens?: number;
+  total_tokens: number;
+}

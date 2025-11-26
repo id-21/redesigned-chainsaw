@@ -7,6 +7,7 @@ import {
   deductUserCredits,
   updateGeneratedAsset,
   createGeneratedAsset,
+  createApiUsageLog,
 } from '@/lib/features/virtual-tryon/queries';
 import { getGenerationTypeCredits } from '@/lib/features/virtual-tryon/utils';
 import {
@@ -14,6 +15,8 @@ import {
   buildGenerationPrompt,
   type GenerationType,
 } from '@/lib/features/virtual-tryon/prompts';
+import { calculateImageTokens } from '@/lib/features/virtual-tryon/cost-utils/cost-calculator';
+import { uploadGeneratedAsset } from '@/lib/features/virtual-tryon/storage';
 
 // POST /api/virtual-tryon/generate - Generate virtual try-on image
 export async function POST(request: NextRequest) {
@@ -145,6 +148,32 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      // Log API usage immediately (fire-and-forget for non-blocking performance)
+      const usage = response.usageMetadata;
+      if (usage) {
+        // Calculate image tokens based on the product image dimensions
+        // For now, using conservative estimate - in production, get actual dimensions
+        const imageTokens = calculateImageTokens(1024, 1024);
+
+        createApiUsageLog({
+          user_id: userId,
+          generated_asset_id: generatedAsset.id,
+          product_id: product_id,
+          api_endpoint: '/api/virtual-tryon/generate',
+          model_used: model,
+          raw_response_metadata: usage,
+          prompt_tokens: usage.promptTokenCount || 0,
+          prompt_image_tokens: imageTokens,
+          output_tokens: usage.candidatesTokenCount || 0,
+          output_image_count: 1, // Currently generating 1 image per request
+          thinking_tokens: (usage as any).thoughtsTokenCount || 0,
+          total_tokens: usage.totalTokenCount || 0,
+        }).catch((err) => {
+          console.error('Failed to log API usage:', err);
+          // Don't throw - we don't want to fail the request if logging fails
+        });
+      }
+
       // Extract image data
       let imageData: string | null = null;
 
@@ -164,12 +193,20 @@ export async function POST(request: NextRequest) {
         throw new Error('No image generated from AI');
       }
 
-      // For now, store base64 in output_assets
-      // In production, you'd upload to Supabase Storage
+      // Convert base64 to Blob and upload to Supabase Storage
+      const generatedImageBuffer = Buffer.from(imageData, 'base64');
+      const imageBlob = new Blob([generatedImageBuffer], { type: 'image/png' });
+
+      const uploadResult = await uploadGeneratedAsset(
+        imageBlob,
+        userId,
+        generatedAsset.id
+      );
+
       const outputAssets = [
         {
-          url: `data:image/png;base64,${imageData}`,
-          filename: `generated-${generatedAsset.id}.png`,
+          url: uploadResult.url,
+          filename: uploadResult.filename,
           type: 'image' as const,
           is_selected: true,
         },
