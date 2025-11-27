@@ -1,31 +1,19 @@
-import { auth } from "@clerk/nextjs/server";
-import { getUserById } from "@/lib/supabase-admin";
-import HomePageClient from "./components/HomePageClient";
-import Link from "next/link";
+import HeroSection from "./components/home/HeroSection";
+import ShowcaseGallery from "./components/home/ShowcaseGallery";
+import BeforeAfterSlider from "./components/home/BeforeAfterSlider";
+import FeatureHighlights from "./components/home/FeatureHighlights";
+import CTASection from "./components/home/CTASection";
+import Footer from "./components/home/Footer";
 
-export default async function Home() {
-  const { userId } = await auth();
-  let isAdmin = false;
-
-  if (userId) {
-    const user = await getUserById(userId);
-    isAdmin = user?.role === "admin" && user?.is_active === true;
-  }
-
+export default function Home() {
   return (
-    <>
-      {isAdmin && (
-        <div className="p-8">
-          <h1 className="text-4xl font-bold mb-4">Admin</h1>
-          <Link
-            href="/admin/dashboard"
-            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors"
-          >
-            Go to Admin Dashboard
-          </Link>
-        </div>
-      )}
-      <HomePageClient />
-    </>
+    <main className="min-h-screen">
+      <HeroSection />
+      <ShowcaseGallery />
+      <BeforeAfterSlider />
+      <FeatureHighlights />
+      <CTASection />
+      <Footer />
+    </main>
   );
 }

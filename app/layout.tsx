@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import AuthHeader from "./components/AuthHeader";
+import { bitter, spaceMono } from "./fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,8 +16,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>
+      <html lang="en" className={`${bitter.variable} ${spaceMono.variable}`}>
+        <body className="font-bitter bg-secondary text-white">
           <AuthHeader />
           {children}
         </body>
