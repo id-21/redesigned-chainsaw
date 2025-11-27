@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    /* Brand Colors */
+    --color-brand-yellow: #bf8e35;
+    --color-brand-blue-black: #002436;
+    --color-brand-purple: #90397d;
+    --color-brand-grey: #c2c3c1;
+
+    /* Semantic Colors */
+    --color-primary: var(--color-brand-yellow);
+    --color-secondary: var(--color-brand-blue-black);
+    --color-accent: var(--color-brand-purple);
+    --color-neutral: var(--color-brand-grey);
+
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-dark: var(--color-brand-blue-black);
+
+    /* Text Colors */
+    --text-primary: var(--color-brand-blue-black);
+    --text-secondary: #4a5568;
+    --text-muted: #718096;
+    --text-inverse: #ffffff;
+  }
+
+  body {
+    color: var(--text-primary);
+    background-color: var(--bg-primary);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-bitter);
+  }
+
+  code, pre {
+    font-family: var(--font-space-mono);
+  }
+}

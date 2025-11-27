@@ -26,14 +26,14 @@ export default function VirtualTryonHomePage({
   const creditWarning = getCreditWarningLevel(credits.credits_remaining);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header Section */}
         <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2">
             Welcome back, {user.name}!
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-lg text-neutral-light">
             Create stunning virtual try-on images for your products
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function VirtualTryonHomePage({
             <div className="flex gap-3">
               <Link
                 href="/virtual-tryon/register"
-                className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors shadow-sm"
+                className="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary-dark text-secondary font-semibold rounded-lg transition-colors shadow-sm"
               >
                 <svg
                   className="w-5 h-5 mr-2"
@@ -92,10 +92,10 @@ export default function VirtualTryonHomePage({
         {/* My Products Section */}
         <div className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">My Products</h2>
+            <h2 className="text-2xl font-bold text-white">My Products</h2>
             <Link
               href="/virtual-tryon/register"
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-primary hover:text-primary-dark font-medium transition-colors"
             >
               + Add Product
             </Link>
@@ -106,13 +106,13 @@ export default function VirtualTryonHomePage({
         {/* Generations Gallery */}
         <div>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">
+            <h2 className="text-2xl font-bold text-white">
               Recent Generations
             </h2>
             {recentGenerations.length > 0 && (
               <Link
                 href="/virtual-tryon/gallery"
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="text-primary hover:text-primary-dark font-medium transition-colors"
               >
                 View All
               </Link>
@@ -143,7 +143,7 @@ export default function VirtualTryonHomePage({
                 </p>
                 <Link
                   href="/virtual-tryon/register"
-                  className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-colors"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-primary hover:bg-primary-dark text-secondary font-semibold rounded-lg transition-colors"
                 >
                   Create Your First Generation
                 </Link>
@@ -180,7 +180,7 @@ export default function VirtualTryonHomePage({
               <h3 className="text-sm font-medium text-gray-500 mb-1">
                 In Progress
               </h3>
-              <p className="text-3xl font-bold text-blue-600">
+              <p className="text-3xl font-bold text-primary">
                 {
                   recentGenerations.filter(
                     (gen) =>
