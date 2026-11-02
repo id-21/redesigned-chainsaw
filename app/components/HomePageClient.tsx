@@ -42,36 +42,38 @@ export default function HomePageClient() {
   };
 
   return (
-    <main className="min-h-screen p-24">
+    <main className="min-h-screen container-page py-16">
       <h1 className="text-4xl font-bold">Virtual Try-On App</h1>
-      <p className="mt-4">NextJS + Clerk + Supabase + Gemini</p>
+      <p className="mt-4 text-neutral">NextJS + Clerk + Supabase + Gemini</p>
 
-      <div className="mt-12 border-t pt-8">
-        <h2 className="text-2xl font-bold mb-4">Generate Image with Gemini</h2>
-        <div className="flex gap-4 items-start">
+      <div className="mt-12 divider"></div>
+
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold mb-6">Generate Image with Gemini</h2>
+        <div className="flex gap-6 items-start">
           <div className="flex-1">
             <input
               type="text"
               value={imagePrompt}
               onChange={(e) => setImagePrompt(e.target.value)}
               placeholder="Enter image generation prompt..."
-              className="w-full px-4 py-3 border rounded-lg mb-4"
+              className="input-dark mb-4"
             />
             <button
               onClick={handleGenerateImage}
               disabled={generatingImage}
-              className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 disabled:bg-gray-400"
+              className="btn btn-primary"
             >
               {generatingImage ? "Generating..." : "Generate Image"}
             </button>
-            {imageError && <p className="mt-4 text-sm text-red-600">{imageError}</p>}
+            {imageError && <p className="form-error mt-4">{imageError}</p>}
           </div>
           {generatedImage && (
             <div className="flex-1">
               <img
                 src={`data:image/png;base64,${generatedImage}`}
                 alt="Generated"
-                className="w-full rounded-lg shadow-lg"
+                className="w-full rounded-lg shadow-brand"
               />
             </div>
           )}

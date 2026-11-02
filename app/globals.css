@@ -1,21 +1,31 @@
 @import "tailwindcss";
 
 @theme {
+  /* Primary Colors (Yellow) */
   --color-primary: #bf8e35;
   --color-primary-dark: #a67a2b;
   --color-primary-light: #d4a456;
 
+  /* Secondary Colors (Blue-Black) */
   --color-secondary: #002436;
   --color-secondary-dark: #001a28;
   --color-secondary-light: #003d5c;
 
+  /* Accent Colors (Purple) */
   --color-accent: #90397d;
   --color-accent-dark: #7a3069;
   --color-accent-light: #a85091;
 
+  /* Neutral Colors (Grey) */
   --color-neutral: #c2c3c1;
   --color-neutral-dark: #a0a19f;
   --color-neutral-light: #d8d9d7;
+
+  /* Brand aliases */
+  --color-brand-yellow: #bf8e35;
+  --color-brand-blue-black: #002436;
+  --color-brand-purple: #90397d;
+  --color-brand-grey: #c2c3c1;
 }
 
 @layer base {
@@ -57,23 +67,23 @@
     font-family: var(--font-space-mono), 'Courier New', monospace;
   }
 
-  /* Link defaults */
-  a {
-    color: var(--color-primary);
-    text-decoration: none;
-    transition: color 200ms ease-in-out;
-  }
-
-  a:hover {
-    color: var(--color-primary-dark);
-  }
-
   /* Focus states */
   :focus-visible {
     outline: 2px solid transparent;
     outline-offset: 2px;
     box-shadow: 0 0 0 2px var(--color-secondary), 0 0 0 4px var(--color-primary);
   }
+}
+
+/* Link defaults - placed outside @layer base to override Tailwind's preflight */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 200ms ease-in-out;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
 }
 
 @layer components {
